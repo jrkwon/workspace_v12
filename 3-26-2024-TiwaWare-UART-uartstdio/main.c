@@ -2,6 +2,8 @@
 //
 // uart_echo.c - Example for reading data from and writing data to the UART
 //
+// using uartstdio to enjoy printf
+//
 //
 //*****************************************************************************
 
@@ -13,8 +15,9 @@
 #include "driverlib/pin_map.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/uart.h"
-#include "utils/uartstdio.h"
 #include "inc/tm4c123gh6pm.h"
+// for uartstdio
+#include "utils/uartstdio.h"
 
 
 int main(void)
@@ -43,12 +46,15 @@ int main(void)
     // Configure the UART for 115,200, 8-N-1 operation. This function uses SysCtlClockGet() to
     //get the system clock frequency. This could be also be a variable or hard coded value instead of a
     //function call.
-    UARTConfigSetExpClk(UART0_BASE, SysCtlClockGet(), 115200,
-                        (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
+    //UARTConfigSetExpClk(UART0_BASE, SysCtlClockGet(), 115200,
+    //                    (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
 
+    // Initialize the UART for console I/O. 115200 BAUD <-- uartstdio
+    UARTStdioConfig(0, 115200, 16000000);
 
     // Put a character to show start of example. This will display on the terminal.
-    UARTCharPut(UART0_BASE, '!');
+    //UARTCharPut(UART0_BASE, '!');
+    UARTprintf("Hello, human. I am talking from the microcontroller.");
 
     while(1)
     {
@@ -58,8 +64,7 @@ int main(void)
         // Write the same character using the blocking write function. This function will not
         // return until there was space in the FIFO and the character is written.
 
-        UARTCharPut(UART0_BASE, ucThisChar);
-        UARTCharPut(UART0_BASE, ucThisChar);
+        UARTprintf("\nYou sent %c to me. Thanks\n", ucThisChar);
     }
 }
 
